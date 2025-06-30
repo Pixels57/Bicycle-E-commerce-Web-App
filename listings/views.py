@@ -32,7 +32,7 @@ def detail(request, detail_id):
     return render(request, 'listings/detail.html', context)
 
 def my_listings(request):
-    my_listings = Listings.objects.order_by('-list_date')
+    my_listings = request.user.listings_set.order_by('-list_date')
     context = {'my_listings': my_listings}
     return render(request, 'listings/my_listings.html', context)
 
