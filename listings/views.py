@@ -14,7 +14,7 @@ def all_listings(request):
     all_listings = Listings.objects.order_by('-list_date')
     my_Filter = ListingFilter(request.GET, queryset=all_listings)
     all_listings = my_Filter.qs
-    context = {'all_listings': all_listings}
+    context = {'all_listings': all_listings, 'my_Filter': my_Filter}
     return render(request, 'listings/all_listings.html', context)
 
 def new_listing(request):
