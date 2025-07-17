@@ -25,5 +25,6 @@ urlpatterns = [
     path('users/', include('users.urls')),
 ]
 
-if settings.DEBUG:
+# Only serve media files locally if not using S3
+if settings.DEBUG and not (settings.AWS_ACCESS_KEY_ID and settings.AWS_SECRET_ACCESS_KEY):
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
