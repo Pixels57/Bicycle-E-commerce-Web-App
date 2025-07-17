@@ -25,9 +25,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-jmejea4^s41g5d50do7yq)74jg$bq0ls!msz4f%93y0+r@qpm@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True  # Set to True for local development
 
-ALLOWED_HOSTS = ['*']  # Configure this properly for production with your actual domain
+#ALLOWED_HOSTS = ['*']  # Configure this properly for production with your actual domain
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']  # Local development hosts
 
 
 # Application definition
@@ -44,7 +45,7 @@ INSTALLED_APPS = [
     'django_filters',
     'crispy_forms',
     'crispy_bootstrap5',
-    'storages',
+    'storages',  # Keep for potential future use
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
@@ -83,16 +84,25 @@ WSGI_APPLICATION = 'example.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# Local SQLite database for development
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'example_1',
-        'USER': 'educative',
-        'PASSWORD': 'password123',
-        'HOST': 'database-1.cvqc8meyaerb.eu-central-1.rds.amazonaws.com',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# Production PostgreSQL configuration (commented out for local development)
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'example_1',
+#         'USER': 'educative',
+#         'PASSWORD': 'password123',
+#         'HOST': 'database-1.cvqc8meyaerb.eu-central-1.rds.amazonaws.com',
+#         'PORT': '5432',
+#     }
+# }
 
 
 # Password validation
@@ -140,28 +150,29 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# S3 Configuration - TEMPORARILY HARDCODED FOR TESTING
-USE_S3 = True  # Set to False to use local storage
+# File Storage Configuration - LOCAL DEVELOPMENT
+USE_S3 = False  # Set to False for local development
 
 if USE_S3:
-    # S3 settings - hardcoded for development testing
-    AWS_ACCESS_KEY_ID = 'AKIAYZTCYPFW25H2PHXX'
-    AWS_SECRET_ACCESS_KEY = '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'
-    AWS_STORAGE_BUCKET_NAME = 'bikecommerce'
-    AWS_S3_REGION_NAME = 'eu-central-1'
-    AWS_S3_FILE_OVERWRITE = False
-    AWS_DEFAULT_ACL = None
+    # S3 settings - for production use only
+    # AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+    # AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+    # AWS_STORAGE_BUCKET_NAME = os.environ.get('S3_BUCKET_NAME')
+    # AWS_S3_REGION_NAME = os.environ.get('AWS_S3_REGION_NAME')
+    # AWS_S3_FILE_OVERWRITE = False
+    # AWS_DEFAULT_ACL = None
     
     # Use S3 for media and static files
     DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
     STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-    MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com/media/'
-    STATIC_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com/static/'
+    # MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com/media/'
+    # STATIC_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com/static/'
 else:
-    # Local storage fallback
+    # Local storage for development
     MEDIA_URL = '/media/'
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 FILE_UPLOAD_PERMISSIONS = 0o644
 
+# AWS credentials removed for security - use environment variables in production
 # django_heroku.settings(locals())  # Removed - using manual configuration instead
