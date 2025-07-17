@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
-import django_heroku
+# import django_heroku  # Removed - using manual environment variables instead
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -164,4 +164,4 @@ else:
 
 FILE_UPLOAD_PERMISSIONS = 0o644
 
-django_heroku.settings(locals())
+# django_heroku.settings(locals())  # Removed - using manual configuration instead
